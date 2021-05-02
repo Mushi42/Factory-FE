@@ -6,7 +6,7 @@ import axios from 'axios';
 
 export default class Index extends Component {
     state = {
-        users: [],
+        customers: [],
         toDashboard: false,
         isLoading: false
     };
@@ -20,8 +20,8 @@ export default class Index extends Component {
     componentDidMount() {
         axios.get(this.url, { params: { token: this.token } })
             .then(response => {
-                const users = response.data.data.employees;
-                this.setState({ users });
+                const customers = response.data.data.employees;
+                this.setState({ customers });
             })
             .catch(error => {
                 this.setState({ toDashboard: true });
@@ -56,12 +56,12 @@ export default class Index extends Component {
                                 <li className="breadcrumb-item">
                                     <Link to={'/dashboard'} >Dashboard</Link>
                                 </li>
-                                <li className="breadcrumb-item active">USERS MANAGEMENT</li>
-                                <li className="ml-auto"><Link to={'add'}>Add User</Link></li>
+                                <li className="breadcrumb-item active">CUSTOMERS MANAGEMENT</li>
+                                <li className="ml-auto"><Link to={'add'}>Add Customer</Link></li>
                             </ol>
                             <div className="card mb-3">
                                 <div className="card-header"><i className="fas fa-table"></i>
-                                    &nbsp;&nbsp;users List
+                                    &nbsp;&nbsp;Customers List
                                 </div>
                                 <div className="card-body">
                                     <table className="table table-bordered">
@@ -71,26 +71,26 @@ export default class Index extends Component {
                                                 <th>Name</th>
                                                 <th>Phone No</th>
                                                 <th>Email ID</th>
-                                                <th>Emp ID</th>
+                                                <th>Customer No.</th>
                                                 <th>Company</th>
                                                 <th>Location</th>
                                                 <th className="text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.users.map((users, index) =>
-                                                <tr key={users.id}>
+                                            {this.state.customers.map((customers, index) =>
+                                                <tr key={customers.id}>
                                                     <td>{index + 1}</td>
-                                                    <td>{users.name}</td>
-                                                    <td>{users.phone}</td>
-                                                    <td>{users.emp_id}</td>
-                                                    <td>{users.email}</td>
-                                                    <td>{users.company}</td>
-                                                    <td>{users.location}</td>
+                                                    <td>{customers.name}</td>
+                                                    <td>{customers.phone}</td>
+                                                    <td>{customers.emp_id}</td>
+                                                    <td>{customers.email}</td>
+                                                    <td>{customers.company}</td>
+                                                    <td>{customers.location}</td>
                                                     <td className="text-center">
-                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit', search: '?id=' + users.id }}>Edit</Link>
+                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit', search: '?id=' + customers.id }}>Edit</Link>
                                                         &nbsp; | &nbsp;
-                                                        <button value={users.id} className="btn btn-sm btn-danger" disabled={index === 0 ? true : false} onClick={this.handleClickDelete} >Delete</button>
+                                                        <button value={customers.id} className="btn btn-sm btn-danger" disabled={index === 0 ? true : false} onClick={this.handleClickDelete} >Delete</button>
                                                     </td>
                                                 </tr>)
                                             }
