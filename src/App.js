@@ -5,11 +5,12 @@ import Dashboard from "./pages/dashboard";
 import Index from "./pages/customers";
 import AddPage from "./pages/addCustomer";
 import AddArticle from "./pages/addArticle";
-import EditPage from "./pages/edit";
+import EditCustomerPage from "./pages/editCustomer";
+import EditArticlePage from "./pages/editArticle";
 import Register from "./pages/register";
 import NotFound from "./pages/notfound";
-import FileUploadPage from "./pages/fileupload";
 import ArticlesPage from './pages/articles'
+import notificationPage from './pages/notifications'
 
 class App extends Component {
 
@@ -25,8 +26,9 @@ class App extends Component {
                         <Route path='/register' component={Register} />
                         <Route path='/add' component={AddPage} />
                         <Route path='/add-article' component={AddArticle} />
-                        <Route path='/edit/' component={EditPage} />
-                        <Route path='/fileupload/' component={FileUploadPage} />
+                        <Route path='/edit/' component={EditCustomerPage} />
+                        <Route path='/edit-article/' component={EditArticlePage} />
+                        <Route path='/alerts/' component={notificationPage} />
                         <Route path='*' component={NotFound} />
                     </Switch>
                 </Router>

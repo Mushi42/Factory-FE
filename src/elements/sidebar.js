@@ -18,6 +18,10 @@ export default class Sidebar extends Component {
                         <Link to={'/articles'} className="nav-link"><i className="fas fa-fw fa-chart-area"></i>
                             <span>&nbsp;Articles</span></Link>
                     </li>
+                    <li className="nav-item">
+                        <Link to={'/alerts'} className="nav-link"><i className="fas fa-fw fa-chart-area"></i>
+                            <span>&nbsp;Notifications</span></Link>
+                    </li>
                 </ul>
             </div>
         );

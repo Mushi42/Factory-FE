@@ -64,15 +64,15 @@ export default class Index extends Component {
     }
 
     handleClickDelete = event => {
-        axios.delete(this.url + '/' + event.target.value, { params: { token: this.token } })
-            .then(response => {
-                this.componentDidMount();
-                this.setState({ isLoading: true })
-            })
-            .catch(error => {
-                console.log(error.toString());
-                this.setState({ toDashboard: true });
-            });
+        // axios.delete(this.url + '/' + event.target.value, { params: { token: this.token } })
+        //     .then(response => {
+        //         this.componentDidMount();
+        //         this.setState({ isLoading: true })
+        //     })
+        //     .catch(error => {
+        //         console.log(error.toString());
+        //         this.setState({ toDashboard: true });
+        //     });
     };
 
     render() {
@@ -120,7 +120,7 @@ export default class Index extends Component {
                                                     <td>{articles.color}</td>
                                                     <td>{articles.designFile}</td>
                                                     <td className="text-center">
-                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit', search: '?id=' + articles.id }}>Edit</Link>
+                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit-article', search: '?id=' + articles.id }}>Edit</Link>
                                                         &nbsp; | &nbsp;
                                                         <button value={articles.id} className="btn btn-sm btn-danger" disabled={index === 0 ? true : false} onClick={this.handleClickDelete} >Delete</button>
                                                     </td>

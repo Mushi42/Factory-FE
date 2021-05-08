@@ -75,9 +75,14 @@ export default class AddPage extends Component {
                     </select>
                 </div>
                 <div>
-                    <input type='file' />
+                    <label style={{ marginRight: 10 }}>Delivery Date</label>
+                    <DatePicker selected={this.state.startDate} onChange={date => this.setState({ startDate: date })} />
                 </div>
-
+                <div>
+                    <label style={{ marginRight: 10 }}>Fit Sample</label>
+                    Yes <input type='radio' />
+                    No <input type='radio' />
+                </div>
             </div>
         })}</div>
     }
@@ -106,18 +111,6 @@ export default class AddPage extends Component {
                                 <div className="card-header">Add Article</div>
                                 <div className="card-body">
                                     <form onSubmit={this.handleSubmit}>
-                                        <div className="form-group">
-                                            <div className="form-row">
-                                                <div>
-                                                    <label for="cars" style={{ marginRight: 10 }}>Select a user against you are creating article </label>
-                                                    <select name="cars" id="cars">
-                                                        <option value="volvo">mushi</option>
-                                                        <option value="saab">testuser</option>
-                                                        <option value="mercedes">admin</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div className="form-group">
                                             <div className="form-row">
                                                 <div className="col-md-6">
@@ -189,18 +182,8 @@ export default class AddPage extends Component {
                                             this.showDesignFiles()
                                         }
 
-                                        <div>
-                                            <label style={{ marginRight: 10 }}>Delivery Date</label>
-                                            <DatePicker selected={this.state.startDate} onChange={date => this.setState({ startDate: date })} />
-                                        </div>
-                                        <div>
-                                            <label style={{ marginRight: 10 }}>Fit Sample</label>
-                                                Yes <input type='radio' />
-                                                No <input type='radio' />
-                                        </div>
 
-
-                                        <button className="btn btn-primary btn-block" type="submit" disabled={this.state.isLoading ? true : false}>Add&nbsp;&nbsp;&nbsp;
+                                        <button className="btn btn-primary btn-block" type="submit" disabled={this.state.isLoading ? true : false}>Update Article&nbsp;&nbsp;&nbsp;
                                             {isLoading ? (
                                                 <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                             ) : (

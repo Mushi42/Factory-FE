@@ -14,6 +14,7 @@ export default class Login extends Component {
         location: {},
     };
 
+
     handleEmailChange = event => {
         this.setState({ email: event.target.value });
     };
@@ -21,21 +22,25 @@ export default class Login extends Component {
         this.setState({ password: event.target.value });
     };
 
-    handleSubmit = event => {
-        event.preventDefault();
+    handleSubmit = async event => {
+        // event.preventDefault();
         this.setState({ isLoading: true });
-        const url = 'https://gowtham-rest-api-crud.herokuapp.com/login';
+        const url = 'http://localhost:7000/api/v1/admin/login';
         const email = this.state.email;
         const password = this.state.password;
-        let bodyFormData = new FormData();
-        bodyFormData.set('email', email);
-        bodyFormData.set('password', password);
-        axios.post(url, bodyFormData)
-            .then(result => {
-                if (result.data.status) {
-                    localStorage.setItem('token', result.data.token);
+        console.log("The credentaiks", email, password)
+        let body = {
+            username: email,
+            password: password
+        }
+        axios.post(url, body)
+            .then(async result => {
+                console.log(result.data.data.token)
+                if (result.data.data.status) {
+                    await localStorage.setItem('token', result.data.data.token);
                     this.setState({ redirect: true, isLoading: false });
-                    localStorage.setItem('isLoggedIn', true);
+                    await localStorage.setItem('isLoggedIn', true);
+                    // alert('Everything is done..')
                 }
             })
             .catch(error => {
@@ -44,18 +49,18 @@ export default class Login extends Component {
             });
     };
 
-    componentDidMount() {
-        const url = 'https://freegeoip.app/json/';
-        axios.get(url)
-            .then(response => {
-                const location = response.data;
-                this.setState({ location });
-            })
-            .catch(error => {
-                this.setState({ toDashboard: true });
-                console.log(error);
-            });
-    }
+    // componentDidMount() {
+    //     const url = 'https://freegeoip.app/json/';
+    //     axios.get(url)
+    //         .then(response => {
+    //             const location = response.data;
+    //             this.setState({ location });
+    //         })
+    //         .catch(error => {
+    //             this.setState({ toDashboard: true });
+    //             console.log(error);
+    //         });
+    // }
 
     renderRedirect = () => {
         if (this.state.redirect) {

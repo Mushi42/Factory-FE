@@ -19,46 +19,46 @@ export default class EditPage extends Component {
     };
 
     componentDidMount() {
-        const id = this.props.location.search[4];
-        axios.get(this.url + '/' + id, { params: { token: this.token } })
-            .then(response => {
-                const emp = response.data.employee;
-                this.setState({ id: emp.id });
-                document.getElementById('inputName').value = emp.name;
-                document.getElementById('inputPhone').value = emp.phone;
-                document.getElementById('inputEmail').value = emp.email;
-                document.getElementById('inputLoca').value = emp.location;
-                document.getElementById('inputEmpId').value = emp.emp_id;
-                document.getElementById('inputComp').value = emp.company;
-            })
-            .catch(error => {
-                this.setState({ toDashboard: true });
-                console.log(error);
-            });
+        // const id = this.props.location.search[4];
+        // axios.get(this.url + '/' + id, { params: { token: this.token } })
+        //     .then(response => {
+        //         const emp = response.data.employee;
+        //         this.setState({ id: emp.id });
+        //         document.getElementById('inputName').value = emp.name;
+        //         document.getElementById('inputPhone').value = emp.phone;
+        //         document.getElementById('inputEmail').value = emp.email;
+        //         document.getElementById('inputLoca').value = emp.location;
+        //         document.getElementById('inputEmpId').value = emp.emp_id;
+        //         document.getElementById('inputComp').value = emp.company;
+        //     })
+        //     .catch(error => {
+        //         this.setState({ toDashboard: true });
+        //         console.log(error);
+        //     });
 
     }
 
     handleSubmit = event => {
-        event.preventDefault();
-        this.setState({ isLoading: true });
-        const token = localStorage.getItem('token');
-        const url = 'https://gowtham-rest-api-crud.herokuapp.com/employees/' + this.state.id;
-        const name = document.getElementById('inputName').value;
-        const phone = document.getElementById('inputPhone').value;
-        const email = document.getElementById('inputEmail').value;
-        const location = document.getElementById('inputLoca').value;
-        const empid = document.getElementById('inputEmpId').value;
-        const company = document.getElementById('inputComp').value;
-        axios.put(url, { name: name, phone: phone, email: email, location: location, emp_id: empid, company: company, token: token })
-            .then(result => {
-                if (result.data.status) {
-                    this.setState({ redirect: true, isLoading: false })
-                }
-            })
-            .catch(error => {
-                this.setState({ toDashboard: true });
-                console.log(error);
-            });
+        // event.preventDefault();
+        // this.setState({ isLoading: true });
+        // const token = localStorage.getItem('token');
+        // const url = 'https://gowtham-rest-api-crud.herokuapp.com/employees/' + this.state.id;
+        // const name = document.getElementById('inputName').value;
+        // const phone = document.getElementById('inputPhone').value;
+        // const email = document.getElementById('inputEmail').value;
+        // const location = document.getElementById('inputLoca').value;
+        // const empid = document.getElementById('inputEmpId').value;
+        // const company = document.getElementById('inputComp').value;
+        // axios.put(url, { name: name, phone: phone, email: email, location: location, emp_id: empid, company: company, token: token })
+        //     .then(result => {
+        //         if (result.data.status) {
+        //             this.setState({ redirect: true, isLoading: false })
+        //         }
+        //     })
+        //     .catch(error => {
+        //         this.setState({ toDashboard: true });
+        //         console.log(error);
+        //     });
     };
 
     renderRedirect = () => {
