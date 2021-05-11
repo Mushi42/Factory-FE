@@ -3,36 +3,11 @@ import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from 'react-router-dom';
 import Modal from 'react-modal';
-import axios from 'axios';
+import { deleteCustomer, findAllCustomers } from '../Service/customersService'
 
 export default class Index extends Component {
     state = {
-        customers: [
-            {
-                name: "mushi",
-                phone: '03013162248',
-                email: 'musharaf42@gmail.com',
-                emp_id: 1,
-                company: 'Softfords',
-                location: 'Lahore'
-            },
-            {
-                name: "mushi",
-                phone: '03013162248',
-                email: 'musharaf42@gmail.com',
-                emp_id: 1,
-                company: 'Softfords',
-                location: 'Lahore'
-            },
-            {
-                name: "mushi",
-                phone: '03013162248',
-                email: 'musharaf42@gmail.com',
-                emp_id: 1,
-                company: 'Softfords',
-                location: 'Lahore'
-            },
-        ],
+        customers: [],
         articles: [
             {
                 image: "",
@@ -64,23 +39,14 @@ export default class Index extends Component {
 
     constructor(props) {
         super(props);
-        this.url = 'https://gowtham-rest-api-crud.herokuapp.com/employees';
-        this.token = localStorage.getItem('token');
         this.openModal = this.openModal.bind(this)
         this.afterOpenModal = this.afterOpenModal.bind(this)
         this.closeModal = this.closeModal.bind(this)
     }
 
-    componentDidMount() {
-        // axios.get(this.url, { params: { token: this.token } })
-        //     .then(response => {
-        //         const customers = response.data.data.employees;
-        //         this.setState({ customers });
-        //     })
-        //     .catch(error => {
-        //         this.setState({ toDashboard: true });
-        //         console.log(error);
-        //     });
+    async componentDidMount() {
+        let response = await findAllCustomers()
+        this.setState({ customers: response })
     }
 
     openModal() {
@@ -95,16 +61,15 @@ export default class Index extends Component {
         this.setState({ modalIsOpen: false })
     }
 
-    handleClickDelete = event => {
-        // axios.delete(this.url + '/' + event.target.value, { params: { token: this.token } })
-        //     .then(response => {
-        //         this.componentDidMount();
-        //         this.setState({ isLoading: true })
-        //     })
-        //     .catch(error => {
-        //         console.log(error.toString());
-        //         this.setState({ toDashboard: true });
-        //     });
+    handleClickDelete = async event => {
+        if (window.confirm('Are you sure you wanna delete?')) {
+            let response = await deleteCustomer(event.target.value)
+            if (response) {
+                window.location.reload(false);
+            } else {
+                alert('Error while deleting...')
+            }
+        }
     };
 
     render() {
@@ -199,18 +164,18 @@ export default class Index extends Component {
                                         </thead>
                                         <tbody>
                                             {this.state.customers.map((customers, index) =>
-                                                <tr key={customers.id}>
+                                                <tr key={customers._id}>
                                                     <td><button className="btn btn-success" onClick={this.openModal}>{index + 1}</button></td>
                                                     <td>{customers.name}</td>
                                                     <td>{customers.phone}</td>
                                                     <td>{customers.email}</td>
-                                                    <td>{customers.emp_id}</td>
-                                                    <td>{customers.company}</td>
+                                                    <td>{customers.empId}</td>
+                                                    <td>{customers.factory}</td>
                                                     <td>{customers.location}</td>
                                                     <td className="text-center">
-                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit', search: '?id=' + customers.id }}>Edit</Link>
+                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit', search: '?id=' + customers._id }}>Edit</Link>
                                                         &nbsp; | &nbsp;
-                                                        <button value={customers.id} className="btn btn-sm btn-danger" disabled={index === 0 ? true : false} onClick={this.handleClickDelete} >Delete</button>
+                                                        <button value={customers._id} className="btn btn-sm btn-danger" onClick={this.handleClickDelete} >Delete</button>
                                                     </td>
                                                 </tr>)
                                             }

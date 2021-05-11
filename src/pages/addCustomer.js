@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from "react-router-dom";
-import axios from 'axios';
+import { createCustomer } from '../Service/customersService'
 
 export default class AddPage extends Component {
 
@@ -12,36 +12,26 @@ export default class AddPage extends Component {
         isLoading: false
     };
 
-    handleSubmit = event => {
-        // event.preventDefault();
-        // this.setState({ isLoading: true });
-        // const token = localStorage.getItem('token');
-        // const url = 'https://gowtham-rest-api-crud.herokuapp.com/employees';
-        // const name = document.getElementById('inputName').value;
-        // const phone = document.getElementById('inputPhone').value;
-        // const email = document.getElementById('inputEmail').value;
-        // const location = document.getElementById('inputLoca').value;
-        // const empid = document.getElementById('inputEmpId').value;
-        // const company = document.getElementById('inputComp').value;
+    handleSubmit = async event => {
+        event.preventDefault();
+        this.setState({ isLoading: true });
 
-        // let bodyFormData = new FormData();
-        // bodyFormData.set('name', name);
-        // bodyFormData.set('phone', phone);
-        // bodyFormData.set('email', email);
-        // bodyFormData.set('location', location);
-        // bodyFormData.set('emp_id', empid);
-        // bodyFormData.set('company', company);
-        // bodyFormData.set('token', token);
-        // axios.post(url, bodyFormData)
-        //     .then(result => {
-        //         if (result.data.status) {
-        //             this.setState({ redirect: true, isLoading: false })
-        //         }
-        //     })
-        //     .catch(error => {
-        //         this.setState({ toDashboard: true });
-        //         console.log(error);
-        //     });
+        let obj = {};
+        obj.name = document.getElementById('inputName').value;
+        obj.phone = document.getElementById('inputPhone').value;
+        obj.email = document.getElementById('inputEmail').value;
+        obj.location = document.getElementById('inputLoca').value;
+        obj.empId = document.getElementById('inputEmpId').value;
+        obj.factory = document.getElementById('inputComp').value;
+        console.log('Body ', obj)
+
+        let response = await createCustomer(obj)
+        console.log('resposne =', response)
+        if (response) {
+            this.props.history.push('/customers')
+        } else {
+            alert('There is an Error while creating customer')
+        }
     };
 
     renderRedirect = () => {

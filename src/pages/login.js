@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import TitleComponent from "./title";
 
 export default class Login extends Component {
@@ -23,7 +23,7 @@ export default class Login extends Component {
     };
 
     handleSubmit = async event => {
-        // event.preventDefault();
+        event.preventDefault();
         this.setState({ isLoading: true });
         const url = 'http://localhost:7000/api/v1/admin/login';
         const email = this.state.email;

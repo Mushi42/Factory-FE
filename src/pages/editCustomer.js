@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
+import { findSingleCustomer, updateCustomer } from '../Service/customersService'
 
 export default class EditPage extends Component {
 
@@ -18,47 +18,41 @@ export default class EditPage extends Component {
         isLoading: false
     };
 
-    componentDidMount() {
-        // const id = this.props.location.search[4];
-        // axios.get(this.url + '/' + id, { params: { token: this.token } })
-        //     .then(response => {
-        //         const emp = response.data.employee;
-        //         this.setState({ id: emp.id });
-        //         document.getElementById('inputName').value = emp.name;
-        //         document.getElementById('inputPhone').value = emp.phone;
-        //         document.getElementById('inputEmail').value = emp.email;
-        //         document.getElementById('inputLoca').value = emp.location;
-        //         document.getElementById('inputEmpId').value = emp.emp_id;
-        //         document.getElementById('inputComp').value = emp.company;
-        //     })
-        //     .catch(error => {
-        //         this.setState({ toDashboard: true });
-        //         console.log(error);
-        //     });
+    async componentDidMount() {
+        console.log(this.props.location)
+        let id = this.props.location.search;
+        id = id.toString().substring(4)
 
+        console.log('id', id)
+        let response = await findSingleCustomer(id)
+        document.getElementById('inputName').value = response.name;
+        document.getElementById('inputPhone').value = response.phone;
+        document.getElementById('inputEmail').value = response.email;
+        document.getElementById('inputLoca').value = response.location;
+        document.getElementById('inputEmpId').value = response.empId;
+        document.getElementById('inputComp').value = response.factory;
     }
 
-    handleSubmit = event => {
-        // event.preventDefault();
-        // this.setState({ isLoading: true });
-        // const token = localStorage.getItem('token');
-        // const url = 'https://gowtham-rest-api-crud.herokuapp.com/employees/' + this.state.id;
-        // const name = document.getElementById('inputName').value;
-        // const phone = document.getElementById('inputPhone').value;
-        // const email = document.getElementById('inputEmail').value;
-        // const location = document.getElementById('inputLoca').value;
-        // const empid = document.getElementById('inputEmpId').value;
-        // const company = document.getElementById('inputComp').value;
-        // axios.put(url, { name: name, phone: phone, email: email, location: location, emp_id: empid, company: company, token: token })
-        //     .then(result => {
-        //         if (result.data.status) {
-        //             this.setState({ redirect: true, isLoading: false })
-        //         }
-        //     })
-        //     .catch(error => {
-        //         this.setState({ toDashboard: true });
-        //         console.log(error);
-        //     });
+    handleSubmit = async event => {
+        event.preventDefault();
+        this.setState({ isLoading: true });
+        let obj = {};
+        obj.name = document.getElementById('inputName').value;
+        obj.phone = document.getElementById('inputPhone').value;
+        obj.email = document.getElementById('inputEmail').value;
+        obj.location = document.getElementById('inputLoca').value;
+        obj.empId = document.getElementById('inputEmpId').value;
+        obj.factory = document.getElementById('inputComp').value;
+
+        let id = this.props.location.search;
+        id = id.toString().substring(4)
+
+        let response = await updateCustomer(id, obj)
+        if (response) {
+            this.props.history.push('/customers')
+        } else {
+            alert('There is an Error while updating customer')
+        }
     };
 
     renderRedirect = () => {

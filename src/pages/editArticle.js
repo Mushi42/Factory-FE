@@ -5,7 +5,6 @@ import { Link, Redirect } from "react-router-dom";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import axios from 'axios';
 
 export default class AddPage extends Component {
 
@@ -69,9 +68,9 @@ export default class AddPage extends Component {
                 <div>
                     <label for="cars" style={{ marginRight: 10 }}>Choose a category </label>
                     <select name="cars" id="cars">
-                        <option value="volvo">Pantom</option>
-                        <option value="saab">CAD</option>
-                        <option value="mercedes">Swatch</option>
+                        <option value="pantom">Pantom</option>
+                        <option value="cad">CAD</option>
+                        <option value="swatch">Swatch</option>
                     </select>
                 </div>
                 <div>

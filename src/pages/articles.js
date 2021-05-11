@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from 'react-router-dom';
-import axios from 'axios';
 
 export default class Index extends Component {
     state = {
