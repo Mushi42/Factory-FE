@@ -5,6 +5,7 @@ import { Link, Redirect } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { findAllCustomers } from '../Service/customersService'
 import { upload } from '../Service/uploadService'
+import { createArticle } from '../Service/articlesService'
 import "react-datepicker/dist/react-datepicker.css";
 
 export default class AddPage extends Component {
@@ -22,12 +23,32 @@ export default class AddPage extends Component {
         techImage: '',
         startDate: new Date(),
         designSelectValue: [],
-        designSelectSingleValue: ''
     };
 
     async componentDidMount() {
         let response = await findAllCustomers()
         this.setState({ customers: response })
+    }
+
+    makeDataforDynamicForms = async () => {
+        let obj = {}, arr = []
+        let length = this.state.designSelectValue.length
+        if (length == 0) {
+            length = 1
+        }
+        console.log('here in the function...', length)
+        for (let i = 0; i < length; i++) {
+            console.log('fsd', i)
+            console.log(this.state.designArray[i].img)
+            console.log(this.state.designSelectValue[i].value)
+            obj.category = this.state.designSelectValue[i].value
+            obj.image = await upload(this.state.designArray[i].img)
+            obj.image = obj.image.accessPath
+            arr.push(obj)
+            // console.log("asda", obj.category)
+        }
+        console.log(arr)
+        return arr
     }
 
     handleSubmit = async event => {
@@ -47,10 +68,18 @@ export default class AddPage extends Component {
         obj.deliveryDate = this.state.startDate
         obj.colorCount = document.getElementById('inputColor').value;
         obj.isFitSample = this.state.isFitSample
-        obj.designArray = this.state.designImagesArray
-        obj.designSelectArray = this.state.designSelectValue
+
+        let data = await this.makeDataforDynamicForms()
+        obj.designFile = data
         console.log(obj)
 
+        let response = await createArticle(obj)
+        console.log('resposne =', response)
+        if (response) {
+            this.props.history.push('/articles')
+        } else {
+            alert('There is an Error while creating articles')
+        }
     };
 
     renderRedirect = () => {
@@ -63,19 +92,13 @@ export default class AddPage extends Component {
         console.log(e);
         this.setState({ color: e.target.value });
         this.showDesignFiles()
-        // this.props.onChange(e);
     };
 
     handleSelectChange = event => {
         this.setState({ selectUser: event.target.value })
     }
 
-    handledDesignSelectChange = event => {
-        let obj = {}
-        obj.iter = event.target.getAttribute('key')
-        obj.value = event.target.value
-        this.setState({ designSelectValue: [...this.state.designSelectValue, obj] })
-    }
+
 
     productImageChange = event => {
         if (event.target.files && event.target.files[0]) {
@@ -96,15 +119,18 @@ export default class AddPage extends Component {
         }
     }
 
-    designImageChange = event => {
-        if (event.target.files && event.target.files[0]) {
-            let obj = {}
-            obj.iter = event.target.getAttribute('key')
-            obj.img = event.target.files[0];
-            this.setState({
-                designArray: [...this.state.designArray, obj]
-            });
-        }
+    handledDesignSelectChange = (event, index) => {
+        let obj = {}
+        obj.iter = index
+        obj.value = event.target.value
+        this.setState({ designSelectValue: [...this.state.designSelectValue, obj] })
+    }
+
+    designImageChange = (event, index) => {
+        let obj = {}
+        obj.iter = index
+        obj.img = event.target.files[0];
+        this.setState({ designArray: [...this.state.designArray, obj] });
     }
 
     showDesignFiles() {
@@ -113,14 +139,15 @@ export default class AddPage extends Component {
                 Design File # {i + 1}
                 <div>
                     <label for="designs" style={{ marginRight: 10 }}>Choose a category </label>
-                    <select name="desgins" key={i} onChange={this.handledDesignSelectChange} required>
+                    <select name="desgins" id={i} key={i} onChange={e => this.handledDesignSelectChange(e, i)} required>
+                        <option value="--">Select Value</option>
                         <option value="pantom">Pantom</option>
                         <option value="cad">CAD</option>
                         <option value="swatch">Swatch</option>
                     </select>
                 </div>
                 <div>
-                    <input type='file' key={i} required onChange={this.designImageChange} />
+                    <input type='file' key={i} required onChange={e => this.designImageChange(e, i)} />
                 </div>
             </div>
         })}</div>
@@ -176,13 +203,13 @@ export default class AddPage extends Component {
                                             <div className="form-row">
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
-                                                        <input type="file" id="productImage" className="form-control" placeholder="Upload Image" required="required" autoFocus="autofocus" onChange={this.productImageChange} />
+                                                        <input type="file" id="productImage" className="form-control" placeholder="Upload Image" required autoFocus="autofocus" onChange={this.productImageChange} />
                                                         <label htmlFor="productImage">Product Image</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
-                                                        <input type="file" id="techImage" className="form-control" placeholder="Upload Tech pack" required="required" onChange={this.techImageChange} />
+                                                        <input type="file" id="techImage" className="form-control" placeholder="Upload Tech pack" required onChange={this.techImageChange} />
                                                         <label htmlFor="techImage">Tech Pack Image</label>
                                                     </div>
                                                 </div>
@@ -192,13 +219,13 @@ export default class AddPage extends Component {
                                             <div className="form-row">
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
-                                                        <input type="number" id="inputStyle" className="form-control" placeholder="Style no." required="required" />
+                                                        <input type="number" id="inputStyle" className="form-control" required placeholder="Style no." />
                                                         <label htmlFor="inputStyle">Style Number</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
-                                                        <input type="number" id="inputItemNo" className="form-control" placeholder="Item no." required="required" />
+                                                        <input type="number" id="inputItemNo" className="form-control" required placeholder="Item no." />
                                                         <label htmlFor="inputItemNo">Item Number</label>
                                                     </div>
                                                 </div>
@@ -208,13 +235,13 @@ export default class AddPage extends Component {
                                             <div className="form-row">
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
-                                                        <input type="text" id="inputFabric" className="form-control" placeholder="Enter Fabric Content" required="required" />
+                                                        <input type="text" id="inputFabric" className="form-control" required placeholder="Enter Fabric Content" />
                                                         <label htmlFor="inputFabric">Enter Fabric Content</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
-                                                        <input type="text-area" id="inputDescription" className="form-control" placeholder="Enter Description" required="required" />
+                                                        <input type="text-area" id="inputDescription" className="form-control" required placeholder="Enter Description" />
                                                         <label htmlFor="inputDescription">Enter Description</label>
                                                     </div>
                                                 </div>
@@ -225,14 +252,14 @@ export default class AddPage extends Component {
                                             <div className="form-row">
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
-                                                        <input type="text" id="inputMod" className="form-control" placeholder="Mode Type" required="required" />
+                                                        <input type="text" id="inputMod" className="form-control" required placeholder="Mode Type" />
                                                         <label htmlFor="inputMod">Mode Type</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
                                                     <div className="form-label-group">
                                                         <input type="number" id="inputColor" value={this.state.color}
-                                                            onChange={this.handleChange} className="form-control" placeholder="Enter Color Count" required="required" />
+                                                            onChange={this.handleChange} className="form-control" required placeholder="Enter Color Count" />
                                                         <label htmlFor="inputColor">Enter Color Count</label>
                                                     </div>
                                                 </div>

@@ -2,64 +2,22 @@ import React, { Component } from 'react';
 import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from 'react-router-dom';
+import { findAllArticles, findAllCustomers } from '../Service/articlesService'
 
 export default class Index extends Component {
     state = {
-        articles: [
-            {
-                image: "",
-                techPackImage: "",
-                styleNumber: 1,
-                itemNo: 3,
-                fabricContent: 'fabric content',
-                descriptive: 'this is descriptive',
-                modType: 'M',
-                color: 'red',
-                designFile: []
-            },
-            {
-                image: "",
-                techPackImage: "",
-                styleNumber: 2,
-                itemNo: 7,
-                fabricContent: 'fabric content',
-                descriptive: 'this is descriptive',
-                modType: 'F',
-                color: 'blue',
-                designFile: []
-            },
-            {
-                image: "",
-                techPackImage: "",
-                styleNumber: 3,
-                itemNo: 19,
-                fabricContent: 'fabric content',
-                descriptive: 'this is descriptive',
-                modType: 'D',
-                color: 'yellow',
-                designFile: []
-            },
-        ],
+        articles: [],
         toDashboard: false,
         isLoading: false
     };
 
     constructor(props) {
         super(props);
-        this.url = 'https://gowtham-rest-api-crud.herokuapp.com/employees';
-        this.token = localStorage.getItem('token');
     }
 
-    componentDidMount() {
-        // axios.get(this.url, { params: { token: this.token } })
-        //     .then(response => {
-        //         const articles = response.data.data.employees;
-        //         this.setState({ articles });
-        //     })
-        //     .catch(error => {
-        //         this.setState({ toDashboard: true });
-        //         console.log(error);
-        //     });
+    async componentDidMount() {
+        let resp = await findAllArticles()
+        this.setState({ articles: resp })
     }
 
     handleClickDelete = event => {
@@ -105,7 +63,7 @@ export default class Index extends Component {
                                                 <th>Mod Type</th>
                                                 <th>Style Number</th>
                                                 <th>Color</th>
-                                                <th>Designs</th>
+                                                <th>Created At</th>
                                                 <th className="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -114,10 +72,10 @@ export default class Index extends Component {
                                                 <tr key={articles.itemNo}>
                                                     <td>{index + 1}</td>
                                                     <td>{articles.fabricContent}</td>
-                                                    <td>{articles.modType}</td>
+                                                    <td>{articles.modeType}</td>
                                                     <td>{articles.styleNumber}</td>
-                                                    <td>{articles.color}</td>
-                                                    <td>{articles.designFile}</td>
+                                                    <td>{articles.colorCount}</td>
+                                                    <td>{articles.createdAt}</td>
                                                     <td className="text-center">
                                                         <Link className="btn btn-sm btn-info" to={{ pathname: 'edit-article', search: '?id=' + articles.id }}>Edit</Link>
                                                         &nbsp; | &nbsp;

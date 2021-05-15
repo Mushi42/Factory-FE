@@ -2,7 +2,6 @@ const axios = require('axios')
 const { BASE_URL } = require('../constants/constants')
 
 export const createArticle = async (body) => {
-    console.log('Bodyyyyyyyyyyyyyy  ', body)
     let createResponse = await axios.post(`${BASE_URL}/api/v1/article/create`, body)
     console.log(createResponse.status)
     if (createResponse.status === 200) {
@@ -12,11 +11,11 @@ export const createArticle = async (body) => {
     }
 }
 
-export const findAllCustomers = async () => {
-    let customers = await axios.get(`${BASE_URL}/api/v1/customer/findAll`);
-    if (customers.status === 200) {
-        if (customers.data.data.length >= 1) {
-            return customers.data.data
+export const findAllArticles = async () => {
+    let articles = await axios.get(`${BASE_URL}/api/v1/article/findAll`);
+    if (articles.status === 200) {
+        if (articles.data.data.length >= 1) {
+            return articles.data.data
         } else {
             return 'No Data'
         }
