@@ -3,6 +3,7 @@ import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import { findSingleArtcile } from '../Service/articlesService'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -12,9 +13,45 @@ export default class AddPage extends Component {
         redirect: false,
         toDashboard: false,
         isLoading: false,
+        selectUser: '',
         color: 1,
-        startDate: new Date()
+        customers: [],
+        designArray: [],
+        isFitSample: false,
+        productImage: '',
+        techImage: '',
+        startDate: new Date(),
+        designSelectValue: [],
     };
+
+    async componentDidMount() {
+        console.log(this.props.location)
+        let id = this.props.location.search;
+        id = id.toString().substring(4)
+
+        console.log('id', id)
+        let resp = await findSingleArtcile(id)
+        document.getElementById('inputStyle').value = resp.styleNumber
+        document.getElementById('inputItemNo').value = resp.itemNumber
+        document.getElementById('inputFabric').value = resp.fabricContent
+        document.getElementById('inputDescription').value = resp.description
+        document.getElementById('inputMod').value = resp.modeType
+        document.getElementById('inputColor').value = resp.colorCount
+
+        // obj.userRef = this.state.selectUser
+        // let productImage = await upload(this.state.productImage)
+        // obj.productImage = productImage.accessPath
+        // let techImage = await upload(this.state.techImage)
+        // obj.techPackImage = techImage.accessPath
+        // obj.styleNumber = document.getElementById('inputStyle').value;
+        // obj.itemNumber = document.getElementById('inputItemNo').value;
+        // obj.fabricContent = document.getElementById('inputFabric').value;
+        // obj.description = document.getElementById('inputDescription').value;
+        // obj.modeType = document.getElementById('inputMod').value;
+        // obj.deliveryDate = this.state.startDate
+        // obj.colorCount = document.getElementById('inputColor').value;
+        // obj.isFitSample = this.state.isFitSample
+    }
 
     handleSubmit = event => {
         // event.preventDefault();
@@ -74,13 +111,7 @@ export default class AddPage extends Component {
                     </select>
                 </div>
                 <div>
-                    <label style={{ marginRight: 10 }}>Delivery Date</label>
-                    <DatePicker selected={this.state.startDate} onChange={date => this.setState({ startDate: date })} />
-                </div>
-                <div>
-                    <label style={{ marginRight: 10 }}>Fit Sample</label>
-                    Yes <input type='radio' />
-                    No <input type='radio' />
+                    <input type='file' key={i} required />
                 </div>
             </div>
         })}</div>
@@ -180,7 +211,15 @@ export default class AddPage extends Component {
                                         {
                                             this.showDesignFiles()
                                         }
-
+                                        <div>
+                                            <label style={{ marginRight: 10 }}>Delivery Date</label>
+                                            <DatePicker selected={this.state.startDate} onChange={date => this.setState({ startDate: date })} />
+                                        </div>
+                                        <div>
+                                            <label style={{ marginRight: 10 }}>Fit Sample</label>
+                                                Yes <input type='radio' />
+                                                No <input type='radio' />
+                                        </div>
 
                                         <button className="btn btn-primary btn-block" type="submit" disabled={this.state.isLoading ? true : false}>Update Article&nbsp;&nbsp;&nbsp;
                                             {isLoading ? (

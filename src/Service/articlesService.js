@@ -24,8 +24,22 @@ export const findAllArticles = async () => {
     }
 }
 
-export const findSingleCustomer = async (id) => {
-    let customers = await axios.get(`${BASE_URL}/api/v1/customer/findOne/${id}`);
+export const findAllArticlesForUser = async (query) => {
+    console.log("Query...", query)
+    let articles = await axios.get(`${BASE_URL}/api/v1/article/findOne/${query.userRef}`, query);
+    if (articles.status === 200) {
+        if (articles.data.data.length >= 1) {
+            return articles.data.data
+        } else {
+            return 'No Data'
+        }
+    } else {
+        return 'Some error occurred...'
+    }
+}
+
+export const findSingleArtcile = async (id) => {
+    let customers = await axios.get(`${BASE_URL}/api/v1/article/findSingle/${id}`);
     if (customers.status === 200) {
         console.log(customers.data)
         if (customers.data.data) {
@@ -38,17 +52,8 @@ export const findSingleCustomer = async (id) => {
     }
 }
 
-export const updateCustomer = async (id, body) => {
-    let customers = await axios.put(`${BASE_URL}/api/v1/customer/update/${id}`, body);
-    if (customers.status === 200) {
-        return true
-    } else {
-        return false
-    }
-}
-
-export const deleteCustomer = async (id) => {
-    let customers = await axios.delete(`${BASE_URL}/api/v1/customer/delete/${id}`);
+export const deleteArticle = async (id) => {
+    let customers = await axios.delete(`${BASE_URL}/api/v1/article/delete/${id}`);
     if (customers.status === 200) {
         return true
     } else {

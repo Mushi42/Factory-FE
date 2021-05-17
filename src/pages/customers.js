@@ -4,34 +4,14 @@ import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from 'react-router-dom';
 import Modal from 'react-modal';
 import { deleteCustomer, findAllCustomers } from '../Service/customersService'
+import { findAllArticlesForUser } from '../Service/articlesService'
+
 
 export default class Index extends Component {
     state = {
         customers: [],
-        articles: [
-            {
-                image: "",
-                techPackImage: "",
-                styleNumber: 1,
-                itemNo: 3,
-                fabricContent: 'fabric content',
-                descriptive: 'this is descriptive',
-                modType: 'M',
-                color: 'red',
-                designFile: []
-            },
-            {
-                image: "",
-                techPackImage: "",
-                styleNumber: 2,
-                itemNo: 7,
-                fabricContent: 'fabric content',
-                descriptive: 'this is descriptive',
-                modType: 'F',
-                color: 'blue',
-                designFile: []
-            }
-        ],
+        userId: "",
+        articles: [],
         toDashboard: false,
         isLoading: false,
         modalIsOpen: false
@@ -49,11 +29,13 @@ export default class Index extends Component {
         this.setState({ customers: response })
     }
 
-    openModal() {
-        this.setState({ modalIsOpen: true });
+    async openModal(id) {
+        this.setState({ userId: id, modalIsOpen: true });
+        let resp = await findAllArticlesForUser({ userRef: id })
+        this.setState({ articles: resp })
     }
 
-    afterOpenModal() {
+    async afterOpenModal() {
 
     }
 
@@ -109,8 +91,7 @@ export default class Index extends Component {
                                             <th>Mod Type</th>
                                             <th>Style Number</th>
                                             <th>Color</th>
-                                            <th>Designs</th>
-                                            <th className="text-center">Action</th>
+                                            <th>Created At</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -118,15 +99,11 @@ export default class Index extends Component {
                                             <tr key={articles.itemNo}>
                                                 <td>{index + 1}</td>
                                                 <td>{articles.fabricContent}</td>
-                                                <td>{articles.modType}</td>
+                                                <td>{articles.modeType}</td>
                                                 <td>{articles.styleNumber}</td>
-                                                <td>{articles.color}</td>
-                                                <td>{articles.designFile}</td>
-                                                <td className="text-center">
-                                                    <Link className="btn btn-sm btn-info" to={{ pathname: 'edit-article', search: '?id=' + articles.id }}>Edit</Link>
-                                                        &nbsp; | &nbsp;
-                                                        <button value={articles.id} className="btn btn-sm btn-danger" disabled={index === 0 ? true : false} onClick={this.handleClickDelete} >Delete</button>
-                                                </td>
+                                                <td>{articles.colorCount}</td>
+                                                <td>{articles.createdAt}</td>
+
                                             </tr>)
                                         }
                                     </tbody>
@@ -165,7 +142,7 @@ export default class Index extends Component {
                                         <tbody>
                                             {this.state.customers.map((customers, index) =>
                                                 <tr key={customers._id}>
-                                                    <td><button className="btn btn-success" onClick={this.openModal}>{index + 1}</button></td>
+                                                    <td><button className="btn btn-success" onClick={() => this.openModal(customers._id)}>{index + 1}</button></td>
                                                     <td>{customers.name}</td>
                                                     <td>{customers.phone}</td>
                                                     <td>{customers.email}</td>

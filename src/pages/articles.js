@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from 'react-router-dom';
-import { findAllArticles, findAllCustomers } from '../Service/articlesService'
+import { findAllArticles, deleteArticle } from '../Service/articlesService'
 
 export default class Index extends Component {
     state = {
@@ -20,16 +20,15 @@ export default class Index extends Component {
         this.setState({ articles: resp })
     }
 
-    handleClickDelete = event => {
-        // axios.delete(this.url + '/' + event.target.value, { params: { token: this.token } })
-        //     .then(response => {
-        //         this.componentDidMount();
-        //         this.setState({ isLoading: true })
-        //     })
-        //     .catch(error => {
-        //         console.log(error.toString());
-        //         this.setState({ toDashboard: true });
-        //     });
+    handleClickDelete = async event => {
+        if (window.confirm('Are you sure you wanna delete?')) {
+            let response = await deleteArticle(event.target.value)
+            if (response) {
+                window.location.reload(false);
+            } else {
+                alert('Error while deleting...')
+            }
+        }
     };
 
     render() {
@@ -77,9 +76,9 @@ export default class Index extends Component {
                                                     <td>{articles.colorCount}</td>
                                                     <td>{articles.createdAt}</td>
                                                     <td className="text-center">
-                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit-article', search: '?id=' + articles.id }}>Edit</Link>
+                                                        <Link className="btn btn-sm btn-info" to={{ pathname: 'edit-article', search: '?id=' + articles._id }}>Edit</Link>
                                                         &nbsp; | &nbsp;
-                                                        <button value={articles.id} className="btn btn-sm btn-danger" disabled={index === 0 ? true : false} onClick={this.handleClickDelete} >Delete</button>
+                                                        <button value={articles._id} className="btn btn-sm btn-danger" onClick={this.handleClickDelete} >Delete</button>
                                                     </td>
                                                 </tr>)
                                             }
