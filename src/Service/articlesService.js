@@ -52,6 +52,15 @@ export const findSingleArtcile = async (id) => {
     }
 }
 
+export const updateArticle = async (id, body) => {
+    let customers = await axios.put(`${BASE_URL}/api/v1/article/update/${id}`, body);
+    if (customers.status === 200) {
+        return true
+    } else {
+        return false
+    }
+}
+
 export const deleteArticle = async (id) => {
     let customers = await axios.delete(`${BASE_URL}/api/v1/article/delete/${id}`);
     if (customers.status === 200) {
