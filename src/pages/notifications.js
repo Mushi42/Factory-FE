@@ -17,8 +17,13 @@ export default class Index extends Component {
 
     async componentDidMount() {
         let resp = await findAllNotifications()
-        console.table(resp)
-        this.setState({ notificatons: resp })
+        if (resp == 'No Notifications') {
+            alert('No Notifications')
+        } else {
+
+            console.table(resp)
+            this.setState({ notificatons: resp })
+        }
     }
 
     render() {
