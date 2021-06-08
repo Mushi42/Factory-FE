@@ -25,7 +25,7 @@ export default class Login extends Component {
     handleSubmit = async event => {
         event.preventDefault();
         this.setState({ isLoading: true });
-        const url = 'http://localhost:7000/api/v1/admin/login';
+        const url = 'http://34.134.95.38:7000/api/v1/admin/login';
         const email = this.state.email;
         const password = this.state.password;
         console.log("The credentaiks", email, password)
@@ -123,7 +123,7 @@ export default class Login extends Component {
                         </form>
                         <div className="text-center">
                             {/* <Link className="d-block small mt-3" to={'register'}>Register an Account</Link> */}
-                            <a className="d-block small" href="forgot-password.html">Forgot Password?</a>
+                            {/*<a className="d-block small" href="forgot-password.html">Forgot Password?</a>*/}
                         </div>
                     </div>
                 </div>
